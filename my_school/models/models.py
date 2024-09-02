@@ -96,12 +96,15 @@ class SchoolQuery(models.Model):
         ('Ninth', 'Ninth'),
         ('Tenth', 'Tenth')
     ], string='Standard', tracking=True)
-    status = fields.Selection([('Draft', 'Draft'), ('Admitted', 'Admitted')], default='Draft')
+    status = fields.Selection([('Draft', 'Draft'), ('Admitted', 'Admitted'),('Closed','Closed')], default='Draft')
     guardian_name = fields.Char(string='Guardian Name', tracking=True)
     guardian_mobile = fields.Char(string='Guardian Number', size=15, tracking=True)
     query_date = fields.Date(string='Date Of Query', default=fields.Date.today, tracking=True)
     query_description = fields.Text(string='Description', tracking=True)
-
+    def status_closed(self):
+        for rec in self:
+            if rec.status!='Closed':
+                rec.status='Closed'
     def student_creation(self):
         student = self.env['school.student'].search(
             [('student_name', '=', self.student_name), ('guardian_name', '=', self.guardian_name),

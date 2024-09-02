@@ -8,7 +8,7 @@
 
             <tree string="Fee Structures">
                 <field name="student_name"/>
-                <field name="fee_type"/>
+                <field name="fee_type" optional="hide"/>
                 <field name="amount"/>
                 <field name="date_due"/>
                 <field name="status"/>

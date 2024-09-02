@@ -9,9 +9,9 @@
                 <field name="student_name"/>
                 <field name="standard"/>
                 <field name="teacher_id"/>
-                <field name="teacher_mob_num"/>
-                <field name="date_of_birth"/>
-                <field name="date_of_joining"/>
+                <field name="teacher_mob_num" optional="hide"/>
+                <field name="date_of_birth" optional="hide"/>
+                <field name="date_of_joining" optional="hide"/>
                 <field name="guardian_name"/>
                 <field name="guardian_mobile"/>
             </tree>

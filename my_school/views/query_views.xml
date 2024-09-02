@@ -24,8 +24,9 @@
         <field name="arch" type="xml">
             <form string="Query">
                 <header>
-                    <button name="student_creation" type="object" class="oe_highlight" string="Admit" invisible="status=='Admitted'"/>
-                    <field name="status" widget="statusbar" statusbar_visible="Draft, Admitted"/>
+                    <button name="student_creation" type="object" class="oe_highlight" string="Admit" invisible="status=='Closed' or 'Admitted'"/>
+                    <button name="status_closed" type="object" string="Close" invisible="status=='Admitted' or 'Closed'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="Draft, Admitted, Closed"/>
                 </header>
                 <sheet>
                     <group>
