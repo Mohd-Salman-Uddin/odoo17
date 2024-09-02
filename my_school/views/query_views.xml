@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Tree View: Lists the queries in a tabular format -->
+    <record id="view_school_query_tree" model="ir.ui.view">
+        <field name="name">school.query.tree</field>
+        <field name="model">school.query</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="student_name"/>
+                <field name="guardian_name"/>
+                <field name="guardian_mobile"/>
+                <field name="query_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View: Details of a single query -->
+    <record id="view_school_query_form" model="ir.ui.view">
+        <field name="name">school.query.form</field>
+        <field name="model">school.query</field>
+        <field name="arch" type="xml">
+            <form string="Query">
+                <header>
+                    <button name="student_creation" type="object" class="oe_highlight" string="Admit" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student_name"/>
+                            <field name="standard"/>
+                            <field name="guardian_name"/>
+                        </group>
+                        <group>
+                            <field name="guardian_mobile"/>
+                            <field name="query_date"/>
+                        </group>
+                        <group>
+                            <field name="query_description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Links the menu item to the list view -->
+    <record id="action_school_query" model="ir.actions.act_window">
+        <field name="name">Queries</field>
+        <field name="res_model">school.query</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_school_query_tree"/>
+    </record>
+
+</odoo>
+

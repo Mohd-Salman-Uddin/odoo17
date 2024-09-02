@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Tree View: Lists the students in a tabular format -->
+    <record id="view_school_student_tree" model="ir.ui.view">
+        <field name="name">school.student.tree</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="student_name"/>
+                <field name="standard"/>
+                <field name="teacher_id"/>
+                <field name="teacher_mob_num"/>
+                <field name="date_of_birth"/>
+                <field name="date_of_joining"/>
+                <field name="guardian_name"/>
+                <field name="guardian_mobile"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View: Details of a single student -->
+    <record id="view_school_student_form" model="ir.ui.view">
+        <field name="name">school.student.form</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+                <header>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student_name"/>
+                            <field name="standard"/>
+                        </group>
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="date_of_joining"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="FEE STRUCTURE LINES">
+                            <field name="fee_structure_ids"/>
+                        </page>
+                        <page string="Additional Details">
+                            <group>
+                                <group>
+                                    <field name="guardian_name"/>
+                                    <field name="guardian_mobile"/>
+                                    <field name="address"/>
+                                </group>
+                                <group>
+                                    <field name="teacher_id"/>
+                                    <field name="teacher_mob_num"/>
+                                    <field name="teachers" widget='many2many_tags'/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Links the menu item to the list view -->
+    <record id="action_school_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">school.student</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_school_student_tree"/>
+    </record>
+
+</odoo>
