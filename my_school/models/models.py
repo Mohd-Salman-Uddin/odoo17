@@ -28,7 +28,7 @@ class SchoolStudent(models.Model):
     ], string='Standard', tracking=True)
     teacher_id = fields.Many2one(comodel_name='school.teacher', string='Class Teacher')
     teacher_mob_num = fields.Char(string="Teacher No.")
-    teachers = fields.Many2many("school.teacher", string="Teachers Appointed")
+    teachers_ids = fields.Many2many("school.teacher", string="Teachers Appointed")
     date_of_birth = fields.Date(string='Date Of Birth', tracking=True)
     age = fields.Integer(string='Age', compute='_compute_age', store=True, readonly=True)
     address = fields.Char(string='Address', tracking=True)
