@@ -40,7 +40,7 @@
                     </group>
 
                     <notebook>
-                        <page string="FEE STRUCTURE LINES">
+                        <page string="Fee Table">
                             <field name="fee_structure_ids"/>
                         </page>
                         <page string="Additional Details">
@@ -60,6 +60,10 @@
                     </notebook>
 
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

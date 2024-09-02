@@ -7,6 +7,9 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
     """,
     'author': "Mohammed Salman Uddin",
     'version': '0.1',
+    'depends' : [
+        'mail'
+    ],
     'data': [
         'security/ir.model.access.csv',
 

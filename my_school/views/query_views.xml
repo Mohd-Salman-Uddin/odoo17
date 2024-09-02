@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <form string="Query">
                 <header>
-                    <button name="student_creation" type="object" class="oe_highlight" string="Admit" />
+                    <button name="student_creation" type="object" class="oe_highlight" string="Admit"/>
                 </header>
                 <sheet>
                     <group>
@@ -39,6 +39,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
