@@ -4,6 +4,7 @@ from odoo import models, fields, api
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
+
 class SchoolStudent(models.Model):
     _name = "school.student"
     _description = "Students Of My_School"
@@ -69,7 +70,8 @@ class SchoolTeacher(models.Model):
     is_class_teacher = fields.Boolean(string='Class Teacher', tracking=True)
 
     # One2many relationship to link to students
-    student_ids = fields.One2many(comodel_name='school.student', inverse_name='teacher_id', string='Students', tracking=True)
+    student_ids = fields.One2many(comodel_name='school.student', inverse_name='teacher_id', string='Students',
+                                  tracking=True)
 
 
 class SchoolQuery(models.Model):
@@ -81,6 +83,7 @@ class SchoolQuery(models.Model):
     ]
 
     student_name = fields.Char(string='Student Name', tracking=True)
+    date_of_birth = fields.Date(string='Date Of Birth', tracking=True)
     standard = fields.Selection([
         ('First', 'First'),
         ('Second', 'Second'),
@@ -93,21 +96,31 @@ class SchoolQuery(models.Model):
         ('Ninth', 'Ninth'),
         ('Tenth', 'Tenth')
     ], string='Standard', tracking=True)
+    status = fields.Selection([('Draft', 'Draft'), ('Admitted', 'Admitted')], default='Draft')
     guardian_name = fields.Char(string='Guardian Name', tracking=True)
     guardian_mobile = fields.Char(string='Guardian Number', size=15, tracking=True)
-    query_date = fields.Date(string='Date', default=fields.Date.today, tracking=True)
+    query_date = fields.Date(string='Date Of Query', default=fields.Date.today, tracking=True)
     query_description = fields.Text(string='Description', tracking=True)
 
     def student_creation(self):
-        student= self.env['school.student'].search([('student_name','=',self.student_name),('guardian_name','=',self.guardian_name),('guardian_mobile','=',self.guardian_mobile)])
+        student = self.env['school.student'].search(
+            [('student_name', '=', self.student_name), ('guardian_name', '=', self.guardian_name),
+             ('guardian_mobile', '=', self.guardian_mobile)])
         if student:
             raise ValidationError("The Student Data Already Exists.!")
+        for rec in self:
+            if rec.status == 'Draft':
+                rec.status = 'Admitted'
+        date_of_joining= datetime.today()
         student = self.env['school.student'].create({
             'student_name': self.student_name,
-            'standard' : self.standard,
-            'guardian_name' : self.guardian_name,
-            'guardian_mobile' : self.guardian_mobile,
+            'standard': self.standard,
+            'date_of_birth' : self.date_of_birth,
+            'guardian_name': self.guardian_name,
+            'guardian_mobile': self.guardian_mobile,
+            'date_of_joining' : date_of_joining,
         })
+
 
 class SchoolFeeStructure(models.Model):
     _name = "school.fee.structure"
@@ -116,7 +129,6 @@ class SchoolFeeStructure(models.Model):
     _inherit = [
         'mail.thread'
     ]
-
 
     student_id = fields.Many2one('school.student', string='Student', tracking=True)
     student_name = fields.Char(related='student_id.student_name', string='Student Name', tracking=True)

@@ -6,10 +6,13 @@
         <field name="model">school.query</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="student_name"/>
-                <field name="guardian_name"/>
-                <field name="guardian_mobile"/>
                 <field name="query_date"/>
+                <field name="student_name"/>
+                <field name="date_of_birth" optional="hide"/>
+                <field name="standard"/>
+                <field name="guardian_name" optional="hide"/>
+                <field name="guardian_mobile"/>
+                <field name="status"/>
             </tree>
         </field>
     </record>
@@ -21,20 +24,22 @@
         <field name="arch" type="xml">
             <form string="Query">
                 <header>
-                    <button name="student_creation" type="object" class="oe_highlight" string="Admit"/>
+                    <button name="student_creation" type="object" class="oe_highlight" string="Admit" invisible="status=='Admitted'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="Draft, Admitted"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="student_name"/>
+                            <field name="date_of_birth"/>
                             <field name="standard"/>
+                        </group>
+                        <group>
                             <field name="guardian_name"/>
-                        </group>
-                        <group>
                             <field name="guardian_mobile"/>
-                            <field name="query_date"/>
                         </group>
                         <group>
+                            <field name="query_date"/>
                             <field name="query_description"/>
                         </group>
                     </group>
