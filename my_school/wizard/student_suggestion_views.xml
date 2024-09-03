@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="student_suggestion_view_form" model="ir.ui.view">
+        <field name="name">student.suggestion.form.view</field>
+        <field name="model">student.suggestion</field>
+        <field name="arch" type="xml">
+            <form string="Suggestion Form">
+                    <group>
+                        <field name="student_name"/>
+                        <field name="standard"/>
+                        <field name="suggestion"/>
+                    </group>
+                    <footer>
+                        <button string="Save" type="object" name="action_save" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

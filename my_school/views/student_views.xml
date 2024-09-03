@@ -25,6 +25,7 @@
         <field name="arch" type="xml">
             <form string="Student">
                 <header>
+                    <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <group>

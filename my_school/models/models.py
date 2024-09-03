@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
@@ -54,6 +54,15 @@ class SchoolStudent(models.Model):
         if self.teacher_id:
             self.teacher_mob_num = self.teacher_id.mobile
 
+    def action_suggest(self):
+        return {
+            'name': _('Suggestion Panel'),
+            'view_mode': 'form',
+            'res_model': 'student.suggestion',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+
 
 class SchoolTeacher(models.Model):
     _name = "school.teacher"
@@ -96,15 +105,17 @@ class SchoolQuery(models.Model):
         ('Ninth', 'Ninth'),
         ('Tenth', 'Tenth')
     ], string='Standard', tracking=True)
-    status = fields.Selection([('Draft', 'Draft'), ('Admitted', 'Admitted'),('Closed','Closed')], default='Draft')
+    status = fields.Selection([('Draft', 'Draft'), ('Admitted', 'Admitted'), ('Closed', 'Closed')], default='Draft')
     guardian_name = fields.Char(string='Guardian Name', tracking=True)
     guardian_mobile = fields.Char(string='Guardian Number', size=15, tracking=True)
     query_date = fields.Date(string='Date Of Query', default=fields.Date.today, tracking=True)
     query_description = fields.Text(string='Description', tracking=True)
+
     def status_closed(self):
         for rec in self:
-            if rec.status!='Closed':
-                rec.status='Closed'
+            if rec.status != 'Closed':
+                rec.status = 'Closed'
+
     def student_creation(self):
         student = self.env['school.student'].search(
             [('student_name', '=', self.student_name), ('guardian_name', '=', self.guardian_name),
@@ -114,14 +125,14 @@ class SchoolQuery(models.Model):
         for rec in self:
             if rec.status == 'Draft':
                 rec.status = 'Admitted'
-        date_of_joining= datetime.today()
+        date_of_joining = datetime.today()
         student = self.env['school.student'].create({
             'student_name': self.student_name,
             'standard': self.standard,
-            'date_of_birth' : self.date_of_birth,
+            'date_of_birth': self.date_of_birth,
             'guardian_name': self.guardian_name,
             'guardian_mobile': self.guardian_mobile,
-            'date_of_joining' : date_of_joining,
+            'date_of_joining': date_of_joining,
         })
 
 
@@ -154,20 +165,41 @@ class SchoolFeeStructure(models.Model):
                 record.status = 'paid'
 
 
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    guardian_name=fields.Char(string='Guardian Name')
-    guardian_mobile=fields.Char(string='Guardian Number',size=15)
+    guardian_name = fields.Char(string='Guardian Name')
+    guardian_mobile = fields.Char(string='Guardian Number', size=15)
+
 
 class InvoiceOrder(models.Model):
     _inherit = 'account.move'
 
-    guardian_name=fields.Char(string='Guardian Name')
-    guardian_mobile=fields.Char(string='Guardian Number', size=15)
+    guardian_name = fields.Char(string='Guardian Name')
+    guardian_mobile = fields.Char(string='Guardian Number', size=15)
+
 
 class InvoiceOrderFee(models.Model):
     _inherit = 'account.move.line'
-    fee_structure_id =fields.Many2one('school.fee.structure',string='Fee Structure')
+    fee_structure_id = fields.Many2one('school.fee.structure', string='Fee Structure')
 
+
+class StudentSuggestions(models.Model):
+    _name = 'student.suggestions'
+    _description = 'Suggestions/Complaints Received From Students'
+    _rec_name = 'student_name'
+
+    student_name = fields.Many2one('school.student', string='Name')
+    standard = fields.Selection([
+        ('First', 'First'),
+        ('Second', 'Second'),
+        ('Third', 'Third'),
+        ('Fourth', 'Fourth'),
+        ('Fifth', 'Fifth'),
+        ('Sixth', 'Sixth'),
+        ('Seventh', 'Seventh'),
+        ('Eighth', 'Eighth'),
+        ('Ninth', 'Ninth'),
+        ('Tenth', 'Tenth')
+    ], string='Standard')
+    suggestion = fields.Text(string="Suggestion/Complaint")
