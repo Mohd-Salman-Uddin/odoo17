@@ -60,7 +60,11 @@ class SchoolStudent(models.Model):
             'view_mode': 'form',
             'res_model': 'student.suggestion',
             'type': 'ir.actions.act_window',
-            'target': 'new'
+            'target': 'new',
+            'context' : {
+            'student_name': self.student_name,
+            'standard':self.standard
+        }
         }
 
 
@@ -189,17 +193,6 @@ class StudentSuggestions(models.Model):
     _description = 'Suggestions/Complaints Received From Students'
     _rec_name = 'student_name'
 
-    student_name = fields.Many2one('school.student', string='Name')
-    standard = fields.Selection([
-        ('First', 'First'),
-        ('Second', 'Second'),
-        ('Third', 'Third'),
-        ('Fourth', 'Fourth'),
-        ('Fifth', 'Fifth'),
-        ('Sixth', 'Sixth'),
-        ('Seventh', 'Seventh'),
-        ('Eighth', 'Eighth'),
-        ('Ninth', 'Ninth'),
-        ('Tenth', 'Tenth')
-    ], string='Standard')
+    student_name = fields.Char(string='Name')
+    standard = fields.Char(string='Standard')
     suggestion = fields.Text(string="Suggestion/Complaint")

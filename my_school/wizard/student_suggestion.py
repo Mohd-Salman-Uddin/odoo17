@@ -3,24 +3,26 @@ class StudentSuggestion(models.TransientModel):
     _name="student.suggestion"
     _description="Complaints Registered By Students"
 
-    student_name=fields.Many2one('school.student', string='Name')
-    standard = fields.Selection([
-        ('First', 'First'),
-        ('Second', 'Second'),
-        ('Third', 'Third'),
-        ('Fourth', 'Fourth'),
-        ('Fifth', 'Fifth'),
-        ('Sixth', 'Sixth'),
-        ('Seventh', 'Seventh'),
-        ('Eighth', 'Eighth'),
-        ('Ninth', 'Ninth'),
-        ('Tenth', 'Tenth')
-    ], string='Standard')
+    student_name=fields.Char(string='Name',readonly=True)
+    standard = fields.Char(string='Standard',readonly=True)
     suggestion=fields.Text(string="Suggestion")
+
+    @api.model
+    def default_get(self,fields_list):
+        res = super(StudentSuggestion,self).default_get(fields_list)
+        context=self.env.context
+        student_name=context.get('student_name')
+        standard=context.get('standard')
+        if student_name:
+            res.update({
+                'student_name':student_name,
+                'standard': standard
+            })
+        return res
 
     def action_save(self):
         self.env['student.suggestions'].create({
-            'student_name': self.student_name.id,
+            'student_name': self.student_name,
             'standard': self.standard,
             'suggestion': self.suggestion,
         })
