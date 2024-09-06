@@ -25,9 +25,25 @@
         <field name="arch" type="xml">
             <form string="Student">
                 <header>
-                    <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"/>
+                    <button name="action_create_student_user" string="CREATE"
+                            type="object" class="oe_highlight"
+                            invisible="select_status=='selected'"/>
+                    <button name="action_select" string="SELECT"
+                            type="object" class="oe_highlight" title="Mark as Selected"
+                            invisible="select_status=='selected'"/>
+                    <field name="select_status" widget="statusbar"/>
+                    <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"
+                            invisible="select_status=='not_selected'"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_suggestions" type="object" class="oe_stat_button" icon="oi-archive">
+                            <div class="o_stat_info">
+                                <field name="suggestion_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Suggestions</span>
+                            </div>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="student_name"/>
@@ -46,6 +62,10 @@
                         </page>
                         <page string="Additional Details">
                             <group>
+                                <group>
+                                    <field name="student_email"/>
+                                    <field name="select_status"/>
+                                </group>
                                 <group>
                                     <field name="guardian_name"/>
                                     <field name="guardian_mobile"/>

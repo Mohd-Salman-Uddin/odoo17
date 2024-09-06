@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Record Rule for Management -->
+    <record id="manager_rule" model="ir.rule">
+        <field name="name">Manager: Access All Student Records</field>
+        <field name="model_id" ref="model_school_student"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_management'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- Record Rule for Students -->
+    <record id="student_rule" model="ir.rule">
+        <field name="name">Student: Access All Students</field>
+        <field name="model_id" ref="model_school_student"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_students'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Teachers -->
+    <record id="teacher_rule" model="ir.rule">
+        <field name="name">Teacher: Access Assigned Students</field>
+        <field name="model_id" ref="model_school_student"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_teachers'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Teachers (Access Assigned Students) -->
+    <record id="teacher_rule" model="ir.rule">
+        <field name="name">Teacher: Access Assigned Students</field>
+        <field name="model_id" ref="model_school_student"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_teachers'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Student Suggestions (Students) -->
+    <record id="student_suggestions_rule_students" model="ir.rule">
+        <field name="name">Student: Access Own Suggestions</field>
+        <field name="model_id" ref="model_student_suggestions"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_students'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Student Suggestions (Students) -->
+    <record id="student_suggestions_rule_students" model="ir.rule">
+        <field name="name">Student: Access Own Suggestions</field>
+        <field name="model_id" ref="model_student_suggestions"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_students'))]"/>
+        <field name="domain_force">[('student_name', '=', user.name)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Student Suggestions (Teachers) -->
+    <record id="student_suggestions_rule_teachers" model="ir.rule">
+        <field name="name">Teacher: Access All Suggestions</field>
+        <field name="model_id" ref="model_student_suggestions"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_teachers'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Record Rule for Student Suggestions (Management) -->
+    <record id="student_suggestions_rule_management" model="ir.rule">
+        <field name="name">Manager: Access All Suggestions</field>
+        <field name="model_id" ref="model_student_suggestions"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_management'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+
+       <!-- Record Rule for Student Teachers (Students) -->
+    <record id="student_Teachers_rule_students" model="ir.rule">
+        <field name="name">Student: Read Only Access To Teachers</field>
+        <field name="model_id" ref="model_school_teacher"/>
+        <field name="groups" eval="[(4, ref('my_school.group_school_students'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+</odoo>

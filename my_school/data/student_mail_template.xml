@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Email Template for New Student -->
+        <record id="student_email_template" model="mail.template">
+            <field name="name">Student Admission Notification</field>
+            <field name="model_id" ref="my_school.model_school_student"/>
+            <field name="subject">Welcome to Our School, {{ object.student_name }}!</field>
+            <field name="email_from">{{ (object.user_id.email_formatted) }}</field>
+            <field name="email_to">{{ object.student_email }}</field>
+            <field name="description">Email sent to new students upon admission.</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0; line-height: 1.6;">
+                    <table style="width: 100%; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                        <tr>
+                            <td style="background-color: #4CAF50; color: white; padding: 20px; text-align: center;">
+                                <h2>Welcome to the SCHOOL!</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px;">
+                                <p style="font-size: 16px; margin: 0;">
+                                    Dear <t t-out="object.student_name"/>,
+                                </p>
+                                <p style="font-size: 16px; margin: 20px 0;">
+                                    Congratulations! You have been admitted to <t t-out="object.standard"/> at our prestigious campus. Your joining date is <t t-out="object.date_of_joining"/>.
+                                </p>
+                                <p style="font-size: 16px; margin: 20px 0;">
+                                    <strong>Portal Login Credentials:</strong><br/>
+                                    Username: <t t-out="object.student_email"/><br/>
+                                    Password: <t t-out="object.student_name"/>
+                                </p>
+                                <p style="font-size: 16px; margin: 20px 0;">
+                                    Please feel free to contact us if you have any questions or need further assistance.
+                                </p>
+                                <p style="font-size: 16px; margin: 20px 0;">
+                                    Best regards,<br/>
+                                    The Administration Team
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #f1f1f1; padding: 10px; text-align: center;">
+                                <p style="margin: 0; font-size: 12px; color: #888;">
+                                    All rights reserved.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -7,12 +7,14 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
     """,
     'author': "Mohammed Salman Uddin",
     'version': '0.1',
-    'depends' : [
+    'depends': [
         'mail',
-        'sale' ,
+        'sale',
         'account'
     ],
     'data': [
+        "security/school_groups.xml",
+        "security/record_rule.xml",
         'security/ir.model.access.csv',
 
         'views/invoice_views.xml',
@@ -24,6 +26,13 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
         'views/teacher_views.xml',
         'views/menu.xml',
         'wizard/student_suggestion_views.xml',
-    ],
-}
 
+        "data/student_mail_template.xml",
+        "data/teacher_mail_template.xml",
+        "reports/report_template.xml",
+        "reports/report_views.xml",
+
+    ],
+    'images': ['static/description/icon.png'],
+
+}

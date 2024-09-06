@@ -2,8 +2,8 @@
 <odoo>
     <menuitem id="menu_school_root" name="My School"/>
     <menuitem id="menu_query" name="Query" parent="menu_school_root" action="action_school_query"/>
-    <menuitem id="menu_fee_structure" name="Fees" parent="menu_school_root" action="action_school_fee_structure"/>
+    <menuitem id="menu_fee_structure" name="Fees" parent="menu_school_root" action="action_school_fee_structure" groups="my_school.group_school_management"/>
     <menuitem id="menu_student" name="Student" parent="menu_school_root" action="action_school_student"/>
     <menuitem id="menu_teacher" name="Teacher" parent="menu_school_root" action="action_school_teacher"/>
-    <menuitem id="menu_suggest" name="Suggestions" parent="menu_school_root" action="action_student_suggestion"/>
+    <menuitem id="menu_suggest" name="Suggestions" parent="menu_school_root" action="action_student_suggestion" groups="my_school.group_school_management" />
 </odoo>

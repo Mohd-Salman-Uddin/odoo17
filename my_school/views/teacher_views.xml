@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="date_of_joining" optional="hide"/>
                 <field name="mobile"/>
+                <field name="teacher_email"/>
                 <field name="date_of_birth" optional="hide"/>
                 <field name="is_class_teacher"/>
             </tree>
@@ -22,6 +23,12 @@
         <field name="arch" type="xml">
             <form string="Teacher">
                 <header>
+                    <button name="action_teacher_selection" string="SELECT"
+                            type="object" class="oe_highlight" title="Mark as Permanent"
+                            invisible=" teacher_selection_status == 'permanent' "/>
+                    <field name="teacher_selection_status" widget="statusbar"/>
+                    <button name="action_create_teacher_user" string="CREATE"
+                            type="object" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <group>
@@ -32,6 +39,7 @@
                         </group>
                         <group>
                             <field name="mobile"/>
+                            <field name="teacher_email"/>
                             <field name="address"/>
                             <field name="is_class_teacher"/>
                         </group>

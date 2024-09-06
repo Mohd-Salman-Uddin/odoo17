@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
@@ -12,7 +12,8 @@ class SchoolStudent(models.Model):
     _inherit = [
         'mail.thread'
     ]
-
+    user_id = fields.Many2one('res.users',string="Username")
+    student_email = fields.Char(string="Student's Email", required=True, tracking=True)
     student_name = fields.Char(string='Name')
     standard = fields.Selection([
         ('First', 'First'),
@@ -35,8 +36,14 @@ class SchoolStudent(models.Model):
     date_of_joining = fields.Date(string='Date Of Joining', tracking=True)
     guardian_name = fields.Char(string='Guardian Name', tracking=True)
     guardian_mobile = fields.Char(string='Guardian Mobile Number', size=15, tracking=True)
+    select_status = fields.Selection([('not_selected', "Not Selected"),
+                                      ('selected', "Selected")],
+                                     default='not_selected', tracking=True,string = "Student Status")
 
     fee_structure_ids = fields.One2many('school.fee.structure', 'student_id', string='Fee Structure', tracking=True)
+
+    def action_select(self):
+        self.select_status = "selected"
 
     @api.depends('date_of_birth')
     def _compute_age(self):
@@ -67,6 +74,38 @@ class SchoolStudent(models.Model):
         }
         }
 
+    def action_create_student_user(self):
+
+        template = self.env.ref('my_school.student_email_template')
+        print("template :", template)
+        for rec in self:
+            template.send_mail(rec.id,force_send=True)
+        user_vals = {
+            'name': self.student_name,
+            'login': self.student_email,
+            'email': self.student_email,
+            'password': self.student_name,
+            'groups_id': [Command.set([self.env.ref('my_school.group_school_students').id])]
+        }
+        self.env['res.users'].create(user_vals)
+
+    suggestion_count = fields.Integer(string="Suggestion Count", compute='compute_suggestion')
+    def compute_suggestion(self):
+        for rec in self:
+            suggestion_count = self.env['student.suggestions'].search_count([('student_name', "=", rec.student_name)])
+            rec.suggestion_count = suggestion_count
+
+    def action_open_suggestions(self):
+        print("Test in smart button")
+        return {
+            'name': 'Suggestions',
+            'view_mode': 'tree,form',
+            'res_model': 'student.suggestions',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'domain':[('student_name','=',self.student_name)]
+        }
+
 
 class SchoolTeacher(models.Model):
     _name = "school.teacher"
@@ -75,16 +114,37 @@ class SchoolTeacher(models.Model):
         'mail.thread'
     ]
 
+    user_id = fields.Many2one('res.users', string="Username")
     name = fields.Char(string='Name', required=True, tracking=True)
+    teacher_email=fields.Char(string="Teacher's Email", required=True, tracking=True)
     date_of_joining = fields.Date(string='Date Of Joining', tracking=True)
     address = fields.Char(string='Address', tracking=True)
     mobile = fields.Char(string='Mobile Number', size=15, tracking=True)
     date_of_birth = fields.Date(string='Date Of Birth', tracking=True)
     is_class_teacher = fields.Boolean(string='Class Teacher', tracking=True)
+    teacher_selection_status = fields.Selection([('temporary', "Temporary"),
+                                      ('permanent', "Permanent")],
+                                     default='temporary')
 
     # One2many relationship to link to students
     student_ids = fields.One2many(comodel_name='school.student', inverse_name='teacher_id', string='Students',
                                   tracking=True)
+    def action_teacher_selection(self):
+        self.teacher_selection_status = "permanent"
+
+    def action_create_teacher_user(self):
+
+        template = self.env.ref('my_school.teacher_email_template')
+        for rec in self:
+            template.send_mail(rec.id,force_send=True)
+        user_vals = {
+            'name': self.name,
+            'login': self.teacher_email,
+            'email': self.teacher_email,
+            'password': self.name,
+            'groups_id': [Command.set([self.env.ref('my_school.group_school_students').id])]
+        }
+        self.env['res.users'].create(user_vals)
 
 
 class SchoolQuery(models.Model):
@@ -95,6 +155,7 @@ class SchoolQuery(models.Model):
         'mail.thread'
     ]
 
+    student_email = fields.Char(string="Student's Email", required=True, tracking=True)
     student_name = fields.Char(string='Student Name', tracking=True)
     date_of_birth = fields.Date(string='Date Of Birth', tracking=True)
     standard = fields.Selection([
@@ -133,6 +194,7 @@ class SchoolQuery(models.Model):
         student = self.env['school.student'].create({
             'student_name': self.student_name,
             'standard': self.standard,
+            'student_email': self.student_email,
             'date_of_birth': self.date_of_birth,
             'guardian_name': self.guardian_name,
             'guardian_mobile': self.guardian_mobile,
@@ -196,3 +258,4 @@ class StudentSuggestions(models.Model):
     student_name = fields.Char(string='Name')
     standard = fields.Char(string='Standard')
     suggestion = fields.Text(string="Suggestion/Complaint")
+    user_id = fields.Many2one('res.users', string='Submitted By', default=lambda self: self.env.user)

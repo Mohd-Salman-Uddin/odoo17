@@ -8,6 +8,7 @@
             <tree>
                 <field name="query_date"/>
                 <field name="student_name"/>
+                <field name="student_email"/>
                 <field name="date_of_birth" optional="hide"/>
                 <field name="standard"/>
                 <field name="guardian_name" optional="hide"/>
@@ -33,6 +34,7 @@
                         <group>
                             <field name="student_name"/>
                             <field name="date_of_birth"/>
+                            <field name="student_email"/>
                             <field name="standard"/>
                         </group>
                         <group>

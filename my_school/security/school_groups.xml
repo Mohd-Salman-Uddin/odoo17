@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_school" model="ir.module.category">
+        <field name="name">My School Management</field>
+    </record>
+
+    <record id='group_school_students' model="res.groups">
+        <field name="name">Students</field>
+        <field name="category_id" ref="my_school.module_category_school"/>
+        <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        <field name="comment">The User Will Have Access Of A Student.</field>
+    </record>
+
+    <record id='group_school_teachers' model="res.groups">
+        <field name="name">Teachers</field>
+        <field name="category_id" ref="my_school.module_category_school"/>
+        <field name="implied_ids" eval="[(4,ref('my_school.group_school_students'))]"/>
+        <field name="comment">The User Will Have Access Of A Teacher.</field>
+    </record>
+
+    <record id='group_school_management' model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="my_school.module_category_school"/>
+        <field name="implied_ids" eval="[(4,ref('my_school.group_school_teachers'))]"/>
+        <field name="comment">The User Will Have Access Of A Manager.</field>
+    </record>
+
+</odoo>
