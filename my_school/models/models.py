@@ -86,11 +86,10 @@ class SchoolStudent(models.Model):
 
     def action_create_student_user(self):
 
-        template = self.env.ref('my_school.student_email_template'
+        template = self.env.ref('my_school.student_email_template')
         print("template :", template)
         for rec in self:
             template.send_mail(rec.id,force_send=True)
-            rec.message_post(body="An email has been sent to the student: %s" % rec.student_name)
         user_vals = {
             'name': self.student_name,
             'login': self.student_email,
@@ -148,7 +147,7 @@ class SchoolTeacher(models.Model):
         template = self.env.ref('my_school.teacher_email_template')
         for rec in self:
             template.send_mail(rec.id,force_send=True)
-            rec.message_post(body="An email has been sent to the student: %s" % rec.name)
+            rec.message_post(body="An email has been sent to the student: %s" % rec.student_name)
         user_vals = {
             'name': self.name,
             'login': self.teacher_email,
