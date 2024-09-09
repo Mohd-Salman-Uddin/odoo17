@@ -9,6 +9,7 @@
             <field name="email_from">{{ (object.user_id.email_formatted) }}</field>
             <field name="email_to">{{ object.student_email }}</field>
             <field name="description">Email sent to new students upon admission.</field>
+            <field name="auto_delete">False</field>
             <field name="body_html" type="html">
                 <div style="font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0; line-height: 1.6;">
                     <table style="width: 100%; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
@@ -50,5 +51,6 @@
                 </div>
             </field>
         </record>
+
     </data>
 </odoo>

@@ -79,10 +79,14 @@
                             </group>
                         </page>
                     </notebook>
-
+                    <group style="text-align: right; margin-left: 1080px;">
+                        <field name="total_amount"/>
+                        <field name="untaxed_amount"/>
+                        <field name="taxed_amount"/>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    <field name="message_follower_ids" options="{'open_attachments': True},{'post_refresh':'recipients'}"/>
                     <field name="message_ids"/>
                 </div>
             </form>

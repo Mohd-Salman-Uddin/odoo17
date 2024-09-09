@@ -6,10 +6,13 @@
         <field name="model">school.fee.structure</field>
         <field name="arch" type="xml">
 
-            <tree string="Fee Structures">
+            <tree string="Fee Structures" editable="bottom">
                 <field name="student_name"/>
                 <field name="fee_type" optional="hide"/>
                 <field name="amount"/>
+                <field name="tax" widget="many2many_tags"/>
+                <field name="tax_amount"/>
+                <field name="total_amount"/>
                 <field name="date_due"/>
                 <field name="status"/>
             </tree>
@@ -30,6 +33,9 @@
                         <field name="student_name" readonly="1"/>
                         <field name="fee_type"/>
                         <field name="amount"/>
+                        <field name="tax" widget="many2many_tags"/>
+                        <field name="tax_amount"/>
+                        <field name="total_amount"/>
                         <field name="date_due"/>
                     </group>
                 </sheet>

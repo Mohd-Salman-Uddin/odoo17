@@ -4,33 +4,90 @@
         <template id="report_template">
             <t t-call="web.html_container">
                 <t t-call="web.external_layout">
+                    <style>
+                        .page {
+                            font-family: 'Roboto', sans-serif;
+                            padding: 20px;
+                        }
+                        h1 {
+                            text-align: center;
+                            color: #333;
+                            font-size: 28px;
+                            border-bottom: 2px solid #5A9;
+                            padding-bottom: 10px;
+                        }
+                        p {
+                            font-size: 16px;
+                            color: #555;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 20px;
+                        }
+                        table th {
+                            background-color: #f8f8f8;
+                            color: #333;
+                            padding: 10px;
+                            text-align: left;
+                        }
+                        table td {
+                            padding: 10px;
+                            color: #555;
+                        }
+                        .totals {
+                            text-align: right;
+                            font-size: 16px;
+                            margin-top: 30px;
+                        }
+                    </style>
 
                     <t t-foreach="docs" t-as="doc">
                         <div class="page">
-                            <h2 style="padding:10px"> Student Admission Report</h2><br/><br/>
-                            <span style="padding: 10px; font-size:25px;" t-field="doc.student_name"/>
-                            <span style="padding: 150px; font-size:25px;" t-field="doc.address"/>
-                            <br/><br/><br/><br/><br/><br/>
+                            <h1>Student Admission Report</h1><br/>
+                            <div class="row" style="margin-bottom: 20px">
+                                <div class="col-6">
+                            <p>Name: <strong><span t-field="doc.student_name"/></strong></p>
+                            <p>Standard: <strong><span t-field="doc.standard"/></strong></p>
+                            <p>Email: <strong><span t-field="doc.student_email"/></strong></p>
+                                    </div>
+                                <div class="col-6">
+                            <p>Guardian Name: <strong><span t-field="doc.guardian_name"/></strong></p>
+                            <p>Mobile Number: <strong><span t-field="doc.guardian_mobile"/></strong></p>
+                            <p>Address: <strong><span t-field="doc.address"/></strong></p>
+
+                                    </div>
+                                </div>
                         </div>
 
                         <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Fee Type</th>
-                                <th>Amount</th>
-                                <th>Due Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="doc.fee_structure_ids" t-as="line">
+                            <thead>
                                 <tr>
-                                    <td><t t-esc="line.fee_type"/></td>
-                                    <td><t t-esc="line.amount"/></td>
-                                    <td><t t-esc="line.date_due"/></td>
+                                    <th>Fee Type</th>
+                                    <th>Amount</th>
+                                    <th>Tax</th>
+                                    <th>Total</th>
+                                    <th>Due Date</th>
                                 </tr>
-                            </t>
-                        </tbody>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.fee_structure_ids" t-as="line">
+                                    <tr>
+                                        <td><t t-esc="line.fee_type"/></td>
+                                        <td><t t-esc="line.amount"/></td>
+                                        <td><span t-field="line.tax"/> </td>
+                                        <td><t t-esc="line.total_amount"/></td>
+                                        <td><t t-esc="line.date_due"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
                         </table>
+
+                        <div class="totals">
+                            <p> Untaxed Amount: <strong><span t-field="doc.untaxed_amount"/></strong></p>
+                            <p> Tax Amount: <strong><span t-field="doc.taxed_amount"/></strong></p>
+                            <p> Total Amount: <strong><span t-field="doc.total_amount"/></strong></p>
+                        </div>
                     </t>
                 </t>
             </t>

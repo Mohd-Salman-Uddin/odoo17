@@ -41,6 +41,16 @@ class SchoolStudent(models.Model):
                                      default='not_selected', tracking=True,string = "Student Status")
 
     fee_structure_ids = fields.One2many('school.fee.structure', 'student_id', string='Fee Structure', tracking=True)
+    total_amount = fields.Float(string="Total Amount", compute='_compute_total_amount', store=True ,readonly=True)
+    untaxed_amount = fields.Float(string="Untaxed Amount", store=True,readonly=True)
+    taxed_amount = fields.Float(string="Total tax Amount", store=True, readonly=True)
+
+    @api.depends('fee_structure_ids.total_amount','fee_structure_ids.amount')
+    def _compute_total_amount(self):
+        for rec in self:
+            rec.total_amount = sum(i.total_amount for i in rec.fee_structure_ids)
+            rec.untaxed_amount = sum(j.amount for j in rec.fee_structure_ids)
+            rec.taxed_amount =  rec.total_amount - rec.untaxed_amount
 
     def action_select(self):
         self.select_status = "selected"
@@ -76,10 +86,11 @@ class SchoolStudent(models.Model):
 
     def action_create_student_user(self):
 
-        template = self.env.ref('my_school.student_email_template')
+        template = self.env.ref('my_school.student_email_template'
         print("template :", template)
         for rec in self:
             template.send_mail(rec.id,force_send=True)
+            rec.message_post(body="An email has been sent to the student: %s" % rec.student_name)
         user_vals = {
             'name': self.student_name,
             'login': self.student_email,
@@ -137,6 +148,7 @@ class SchoolTeacher(models.Model):
         template = self.env.ref('my_school.teacher_email_template')
         for rec in self:
             template.send_mail(rec.id,force_send=True)
+            rec.message_post(body="An email has been sent to the student: %s" % rec.name)
         user_vals = {
             'name': self.name,
             'login': self.teacher_email,
@@ -205,11 +217,13 @@ class SchoolQuery(models.Model):
 class SchoolFeeStructure(models.Model):
     _name = "school.fee.structure"
     _description = "Fee Structure"
-    _rec_name = 'student_id'
+    _rec_name = 'tax'
     _inherit = [
         'mail.thread'
     ]
 
+    tax_amount=fields.Float(string='Tax Amount',compute='_compute_tax_amount', default=0.0, store=True)
+    tax=fields.Many2many('account.tax',string="Tax")
     student_id = fields.Many2one('school.student', string='Student', tracking=True)
     student_name = fields.Char(related='student_id.student_name', string='Student Name', tracking=True)
     fee_type = fields.Selection([
@@ -218,12 +232,29 @@ class SchoolFeeStructure(models.Model):
         ('sports', 'Sports Fee'),
         ('other', 'Other Fee')
     ], string='Fee Type', required=True, tracking=True)
-    amount = fields.Float(string='Amount', required=True, default=0.0, tracking=True)
+    amount = fields.Float(string='Untaxed Amount', required=True, default=0.0, tracking=True)
     date_due = fields.Date(string='Due Date', required=True, tracking=True)
     status = fields.Selection([
         ('not_paid', 'Unpaid'),
         ('paid', 'Paid')
     ], string='Status', default='not_paid', tracking=True)
+    total_amount=fields.Float(string='Total',compute='_compute_total_amount', store=True)
+
+    @api.depends('amount','tax_amount')
+    def _compute_total_amount(self):
+        for rec in self:
+            rec.total_amount= rec.amount + rec.tax_amount
+
+    @api.depends('amount','tax')
+    def _compute_tax_amount(self):
+        for rec in self:
+            total_tax_amount=0.0
+            if rec.tax:
+                for tax in rec.tax:
+                    total_tax_amount+= (rec.amount*tax.amount/100)
+                rec.tax_amount=total_tax_amount
+            else:
+                rec.tax_amount = 0
 
     def action_set_paid(self):
         for record in self:
