@@ -7,14 +7,14 @@
         <field name="arch" type="xml">
 
             <tree string="Fee Structures" editable="bottom">
-                <field name="student_name"/>
-                <field name="fee_type" optional="hide"/>
+<!--                <field name="date_due"/>-->
+                <field name="fee_type"/>
                 <field name="amount"/>
                 <field name="tax" widget="many2many_tags"/>
                 <field name="tax_amount"/>
-                <field name="total_amount"/>
-                <field name="date_due"/>
-                <field name="status"/>
+                <field name="total_amount" />
+<!--                <field name="status"/>-->
+<!--                <button name="action_proceed_payment" type="object" class="oe_highlight" string="Payment"/>-->
             </tree>
         </field>
     </record>
@@ -25,18 +25,17 @@
         <field name="arch" type="xml">
             <form string="Fee Structure">
                 <header>
-                    <button name="action_set_paid" type="object" string="Set as Paid"/>
-                    <field name="status" widget="statusbar" statusbar_visible="not_paid, paid"/>
+<!--                    <button name="action_set_paid" type="object" string="Set as Paid"/>-->
+<!--                    <field name="status" widget="statusbar" statusbar_visible="not_paid, paid"/>-->
                 </header>
                 <sheet>
                     <group>
-                        <field name="student_name" readonly="1"/>
                         <field name="fee_type"/>
-                        <field name="amount"/>
+                        <field name="amount" widget="monetary"/>
                         <field name="tax" widget="many2many_tags"/>
-                        <field name="tax_amount"/>
-                        <field name="total_amount"/>
-                        <field name="date_due"/>
+                        <field name="tax_amount" widget="monetary"/>
+                        <field name="total_amount" widget="monetary"/>
+<!--                        <field name="date_due"/>-->
                     </group>
                 </sheet>
                 <div class="oe_chatter">

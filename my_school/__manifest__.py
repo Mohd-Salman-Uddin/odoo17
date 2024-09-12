@@ -32,6 +32,8 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
         "reports/report_template.xml",
         "reports/report_views.xml",
 
+        "data/cron.xml",
+        "data/fee_due_reminder_email_template.xml",
     ],
     'images': ['static/description/icon.png'],
 

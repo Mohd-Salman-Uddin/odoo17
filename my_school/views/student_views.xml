@@ -1,104 +1,133 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <!-- Tree View: Lists the students in a tabular format -->
-    <record id="view_school_student_tree" model="ir.ui.view">
-        <field name="name">school.student.tree</field>
-        <field name="model">school.student</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="student_name"/>
-                <field name="standard"/>
-                <field name="teacher_id"/>
-                <field name="teacher_mob_num" optional="hide"/>
-                <field name="date_of_birth" optional="hide"/>
-                <field name="date_of_joining" optional="hide"/>
-                <field name="guardian_name"/>
-                <field name="guardian_mobile"/>
-            </tree>
-        </field>
-    </record>
+    <data>
+        <!-- Tree View: Lists the students in a tabular format -->
+        <record id="view_school_student_tree" model="ir.ui.view">
+            <field name="name">school.student.tree</field>
+            <field name="model">school.student</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="student_name"/>
+                    <field name="standard"/>
+                    <field name="teacher_id"/>
+                    <field name="teacher_mob_num" optional="hide"/>
+                    <field name="date_of_birth" optional="hide"/>
+                    <field name="date_of_joining" optional="hide"/>
+                    <field name="guardian_name"/>
+                    <field name="guardian_mobile"/>
+                    <field name="guardian_email"/>
+                </tree>
+            </field>
+        </record>
 
-    <!-- Form View: Details of a single student -->
-    <record id="view_school_student_form" model="ir.ui.view">
-        <field name="name">school.student.form</field>
-        <field name="model">school.student</field>
-        <field name="arch" type="xml">
-            <form string="Student">
-                <header>
-                    <button name="action_create_student_user" string="CREATE"
-                            type="object" class="oe_highlight"
-                            invisible="select_status=='selected'"/>
-                    <button name="action_select" string="SELECT"
-                            type="object" class="oe_highlight" title="Mark as Selected"
-                            invisible="select_status=='selected'"/>
-                    <field name="select_status" widget="statusbar"/>
-                    <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"
-                            invisible="select_status=='not_selected'"/>
-                </header>
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_open_suggestions" type="object" class="oe_stat_button" icon="oi-archive">
-                            <div class="o_stat_info">
-                                <field name="suggestion_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Suggestions</span>
-                            </div>
-                        </button>
-                    </div>
-                    <group>
+        <!-- Form View: Details of a single student -->
+        <record id="view_school_student_form" model="ir.ui.view">
+            <field name="name">school.student.form</field>
+            <field name="model">school.student</field>
+            <field name="arch" type="xml">
+                <form string="Student">
+                    <header>
+                        <button name="action_select" string="SELECT"
+                                type="object" class="oe_highlight" title="Mark as Selected"
+                                invisible="select_status=='selected'"/>
+                        <field name="select_status" widget="statusbar"/>
+                        <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"
+                                invisible="select_status=='not_selected'"/>
+                        <button name="action_proceed_payment" type="object" class="oe_highlight"
+                                        string="Payment" invisible="select_status=='not_selected' or status=='paid'"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_suggestions" type="object" class="oe_stat_button"
+                                    icon="oi-archive">
+                                <div class="o_stat_info">
+                                    <field name="suggestion_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Suggestions</span>
+                                </div>
+                            </button>
+                        </div>
                         <group>
-                            <field name="student_name"/>
-                            <field name="standard"/>
-                        </group>
-                        <group>
-                            <field name="date_of_birth"/>
-                            <field name="age"/>
-                            <field name="date_of_joining"/>
-                        </group>
-                    </group>
-
-                    <notebook>
-                        <page string="Fee Table">
-                            <field name="fee_structure_ids"/>
-                        </page>
-                        <page string="Additional Details">
                             <group>
-                                <group>
-                                    <field name="student_email"/>
-                                    <field name="select_status"/>
-                                </group>
-                                <group>
-                                    <field name="guardian_name"/>
-                                    <field name="guardian_mobile"/>
-                                    <field name="address"/>
-                                </group>
-                                <group>
-                                    <field name="teacher_id"/>
-                                    <field name="teacher_mob_num"/>
-                                    <field name="teachers_ids" widget='many2many_tags'/>
-                                </group>
+                                <field name="student_name"/>
+                                <field name="standard"/>
+                                <field name="invoice_id"/>
+                                <field name="status"/>
                             </group>
-                        </page>
-                    </notebook>
-                    <group style="text-align: right; margin-left: 1080px;">
-                        <field name="total_amount"/>
-                        <field name="untaxed_amount"/>
-                        <field name="taxed_amount"/>
-                    </group>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" options="{'open_attachments': True},{'post_refresh':'recipients'}"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
+                            <group>
+                                <field name="date_of_birth"/>
+                                <field name="age"/>
+                                <field name="date_of_joining"/>
+                            </group>
+                        </group>
 
-    <!-- Action: Links the menu item to the list view -->
-    <record id="action_school_student" model="ir.actions.act_window">
-        <field name="name">Students</field>
-        <field name="res_model">school.student</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_school_student_tree"/>
-    </record>
+                        <notebook>
+                            <page string="Fee Table">
+                                <field name="fee_structure_ids">
+                                    <tree editable="bottom">
+                                        <field name="fee_type"/>
+                                        <field name="product_id"/>
+                                        <field name="amount"/>
+                                        <field name="tax" widget="many2many_tags"/>
+                                        <field name="tax_amount"/>
+                                        <field name="total_amount"/>
+                                    </tree>
+                                    <form>
+                                        <field name="fee_type"/>
+                                        <field name="amount"/>
+                                        <field name="tax" widget="many2many_tags"/>
+                                        <field name="tax_amount"/>
+                                        <field name="total_amount"/>
+                                    </form>
+                                </field>
+                                <div class="row">
+                                    <div class="col-9">
+                                    </div>
+                                    <div class="col-3">
+                                        <group style="text-align: right;">
+                                            <field name="total_amount"/>
+                                            <field name="untaxed_amount"/>
+                                            <field name="taxed_amount"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Additional Details">
+                                <group>
+                                    <group>
+                                        <field name="student_email"/>
+                                        <field name="select_status"/>
+                                    </group>
+                                    <group>
+                                        <field name="guardian_name"/>
+                                        <field name="guardian_mobile"/>
+                                        <field name="guardian_email"/>
+                                        <field name="address"/>
+                                    </group>
+                                    <group>
+                                        <field name="teacher_id"/>
+                                        <field name="teacher_mob_num"/>
+                                        <field name="teachers_ids" widget='many2many_tags'/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
 
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"
+                               options="{'open_attachments': True},{'post_refresh':'recipients'}"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action: Links the menu item to the list view -->
+        <record id="action_school_student" model="ir.actions.act_window">
+            <field name="name">Students</field>
+            <field name="res_model">school.student</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_school_student_tree"/>
+        </record>
+    </data>
 </odoo>

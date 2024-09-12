@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<data>
+           <!-- Fee Due Reminder - 7 Days Prior -->
+        <record id="ir_cron_fee_due_reminder" model="ir.cron">
+            <field name="name">Reminds The Guardian - Fee</field>
+            <field name="model_id" ref="model_school_student"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_fee_due_reminder()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+</data>
+</odoo>
