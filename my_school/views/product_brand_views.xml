@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_product_brand_tree" model="ir.ui.view">
+        <field name="name">Brand Tree</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+          <tree>
+              <field name="brand_name"/>
+          </tree>
+        </field>
+    </record>
+       <record id="view_product_brand_form" model="ir.ui.view">
+        <field name="name">Brand Form</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+          <form>
+              <group>
+              <field name="brand_name"/>
+              </group>
+          </form>
+        </field>
+    </record>
+ <record id="action_product_brand" model="ir.actions.act_window">
+        <field name="name">Brand</field>
+        <field name="res_model">product.brand</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create a new brand
+            </p>
+        </field>
+    </record>
+        <record id="view_product_template_brand_field" model="ir.ui.view">
+        <field name="name">sale_order_form_inherit_guardian_fields</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="brand_ids"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

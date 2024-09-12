@@ -33,8 +33,6 @@
                         <field name="select_status" widget="statusbar"/>
                         <button string="Suggest" name="action_suggest" type="object" class="oe_highlight"
                                 invisible="select_status=='not_selected'"/>
-                        <button name="action_proceed_payment" type="object" class="oe_highlight"
-                                        string="Payment" invisible="select_status=='not_selected' or status=='paid'"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -45,13 +43,19 @@
                                     <span class="o_stat_text">Suggestions</span>
                                 </div>
                             </button>
+                            <button name="action_open_invoices" type="object" class="oe_stat_button"
+                                    icon="oi-view-list">
+                                <div class="o_stat_info">
+                                    <field name="invoice_count" class="o_stat_value"/>
+                                    <span class="o_stat_text">Invoices</span>
+                                </div>
+                            </button>
                         </div>
                         <group>
                             <group>
                                 <field name="student_name"/>
+                                <field name="gender"/>
                                 <field name="standard"/>
-                                <field name="invoice_id"/>
-                                <field name="status"/>
                             </group>
                             <group>
                                 <field name="date_of_birth"/>
@@ -70,6 +74,9 @@
                                         <field name="tax" widget="many2many_tags"/>
                                         <field name="tax_amount"/>
                                         <field name="total_amount"/>
+                                        <button name="action_proceed_payment" type="object" class="oe_highlight"
+                                                string="Payment" invisible="status=='paid'"/>
+                                        <field name="status"/>
                                     </tree>
                                     <form>
                                         <field name="fee_type"/>

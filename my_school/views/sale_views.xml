@@ -6,10 +6,20 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group/group/field[@name='partner_id']" position="after">
-
                 <field name="guardian_name"/>
                 <field name="guardian_mobile"/>
 
+            </xpath>
+            <xpath expr="//tree//field[@name='price_unit']" position="after">
+                <field name="brand_ids"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="inside">
+                <group>
+                    <field name="bank_name"/>
+                    <field name="account_number"/>
+                    <field name="ifsc_code"/>
+                    <field name="branch"/>
+                </group>
             </xpath>
         </field>
     </record>

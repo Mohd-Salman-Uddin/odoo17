@@ -12,6 +12,7 @@ class SchoolQuery(models.Model):
 
     student_email = fields.Char(string="Student's Email", required=True, tracking=True)
     student_name = fields.Char(string='Student Name', tracking=True)
+    gender = fields.Selection([('Male', 'Male'), ('Female', 'Female')], string='Gender')
     date_of_birth = fields.Date(string='Date Of Birth', tracking=True)
     standard = fields.Selection([
         ('First', 'First'),
@@ -50,6 +51,7 @@ class SchoolQuery(models.Model):
             'student_name': self.student_name,
             'standard': self.standard,
             'student_email': self.student_email,
+            'gender' : self.gender,
             'date_of_birth': self.date_of_birth,
             'guardian_name': self.guardian_name,
             'guardian_mobile': self.guardian_mobile,

@@ -24,6 +24,7 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
         'views/student_views.xml',
         'views/suggestions_views.xml',
         'views/teacher_views.xml',
+        'views/product_brand_views.xml',
         'views/menu.xml',
         'wizard/student_suggestion_views.xml',
 

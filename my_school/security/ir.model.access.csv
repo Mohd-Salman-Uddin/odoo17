@@ -1,6 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_school_student_students,access_school_student_students,model_school_student,my_school.group_school_students,1,0,0,0
+access_product_brand_students,access_product_brand_students,model_product_brand,my_school.group_school_students,1,1,1,1
 access_school_teacher_students,access_school_teacher_students,model_school_teacher,my_school.group_school_students,1,0,0,0
 access_school_fee_structure_students,access_school_fee_structure_students,model_school_fee_structure,my_school.group_school_students,1,0,0,0
 access_student_suggestions_students,access_student_suggestions_students,model_student_suggestions,my_school.group_school_students,1,1,1,0

@@ -6,4 +6,5 @@
     <menuitem id="menu_student" name="Student" parent="menu_school_root" action="action_school_student"/>
     <menuitem id="menu_teacher" name="Teacher" parent="menu_school_root" action="action_school_teacher"/>
     <menuitem id="menu_suggest" name="Suggestions" parent="menu_school_root" action="action_student_suggestion" groups="my_school.group_school_management" />
+    <menuitem id="menu_brand" name="Brand" parent="menu_school_root" action="action_product_brand" groups="my_school.group_school_students" />
 </odoo>
