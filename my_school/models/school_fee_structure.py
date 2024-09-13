@@ -14,7 +14,7 @@ class FeesStructure(models.Model):
          ('Transport Fee', 'Transport Fee'), ('Other Fee', 'Other Fee')], string="Fee Type")
     due_date = fields.Date(string='Due Date')
     amount = fields.Float(string='Untaxed Fee')
-    status = fields.Selection([("Unpaid", "Unpaid"), ("Paid", "Paid")], default="Unpaid", track_visibility="onchange")
+    status = fields.Selection([("Unpaid", "Unpaid"), ("Paid", "Paid")], default="Unpaid", compute='_compute_status_based_on_invoice')
     tax = fields.Many2many('account.tax', string="Tax")
     tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', default=0.0, store=True)
     total_amount = fields.Float(string='Total', compute='_compute_total_amount', store=True)
@@ -69,39 +69,38 @@ class FeesStructure(models.Model):
                 'view_mode': 'form',
                 'target': 'current',
             }
+        else:
+            # If no invoice exists, create a new one
+            partner = self.env['res.partner'].search([('name', '=', self.student_id.student_name)], limit=1)
+            invoice = self.env['account.move'].create({
+                'partner_id': partner.id,
+                'guardian_name': self.student_id.guardian_name,
+                'guardian_mobile': self.student_id.guardian_mobile,
+                'move_type': 'out_invoice',
+                'invoice_date': fields.Date.today(),
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': self.product_id.id,
+                    'fee_structure_id': self.id,
+                    'name': 'Fee for %s' % self.fee_type,
+                    'quantity': 1,
+                    'price_unit': self.total_amount,
+                    'tax_ids': [(6, 0, self.tax.ids)],
+                })],
+            })
 
-        # If no invoice exists, create a new one
-        partner = self.env['res.partner'].search([('name', '=', self.student_id.student_name)], limit=1)
-        invoice = self.env['account.move'].create({
-            'partner_id': partner.id,
-            'guardian_name': self.student_id.guardian_name,
-            'guardian_mobile': self.student_id.guardian_mobile,
-            'move_type': 'out_invoice',
-            'invoice_date': fields.Date.today(),
-            'invoice_line_ids': [(0, 0, {
-                'product_id': self.product_id.id,
-                'fee_structure_id': self.id,
-                'name': 'Fee for %s' % self.fee_type,
-                'quantity': 1,
-                'price_unit': self.total_amount,
-                'tax_ids': [(6, 0, self.tax.ids)],
-            })],
-        })
+            # Link the invoice to the fee structure
+            self.invoice_id = invoice.id
 
-        # Link the invoice to the fee structure
-        self.invoice_id = invoice.id
+            # Redirect to the newly created invoice
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Invoice'),
+                'res_model': 'account.move',
+                'res_id': invoice.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
 
-        # Redirect to the newly created invoice
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Invoice'),
-            'res_model': 'account.move',
-            'res_id': invoice.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
-
-    @api.depends('invoice_id.payment_state')
     def _compute_status_based_on_invoice(self):
         """ Compute the fee status based on invoice payment state """
         for rec in self:
@@ -117,7 +116,4 @@ class FeesStructure(models.Model):
                 rec.status = 'Unpaid'  # If no invoice yet
                 print(f"No Invoice for record {rec.id}, setting status to Unpaid.")
 
-    # Adding a button to manually trigger the computation (for debugging)
-    def action_update_status(self):
-        """Manually trigger the status update based on invoice payment state"""
-        self._compute_status_based_on_invoice()
+

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- file: school_student_report.xml -->
+<odoo>
+    <data>
+        <template id="new_quotation_report_template">
+            <t t-call="web.external_layout">
+                <main>
+                    <div class="page">
+                        <br/>
+                        <t t-foreach="docs" t-as="doc">
+                            <h2 class="mt-4" style="text-align: center;">
+                            <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice #</span>
+                            <span t-elif="doc.state in ['draft','sent']">Quotation #</span>
+                            <span t-else="">Sale Order #</span>
+                            <span t-field="doc.name"/>
+                        </h2>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Bank Name:</strong><span t-field="doc.bank_name"/><br/>
+                                    <strong>Account Number:</strong><span t-field="doc.account_number"/><br/>
+                                    <strong>IFSC Code:</strong><span t-field="doc.ifsc_code"/><br/>
+                                    <strong>Branch :</strong><span t-field="doc.branch"/><br/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Sales Person:</strong><span t-field="doc.user_id"/><br/>
+                                    <strong>Quotation Date:</strong><span t-field="doc.date_order"/><br/>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <table class="table table-bordered" style="border: 2px solid black;text-align:center;">
+                                <thead>
+                                    <tr>
+                                        <th>S No.</th>
+                                        <th>Product</th>
+                                        <th>Product Brand</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Taxes</th>
+                                        <th>Total Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="serial_no" t-value="1"/>
+                                    <t t-foreach="doc.order_line" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="serial_no"/></td>
+                                            <td><span t-field="line.product_template_id"/></td>
+                                            <td><span t-field="line.brand_ids"/></td>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.product_uom_qty"/></td>
+                                            <td><span t-field="line.price_unit"/></td>
+                                            <td><span t-field="line.tax_id"/></td>
+                                            <td><span t-field="line.price_subtotal"/></td>
+                                        </tr>
+                                        <t t-set="serial_no" t-value="serial_no + 1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/> <br/> <br/> <br/> <br/>
+                            <div class="row">
+                                <div class="col-4 offset-8">
+                                    <table class="table table-bordered" style="border: 2px solid black; text-align:center;">
+                                        <tr>
+                                            <td><strong>Untaxed Amount</strong></td>
+                                            <td><span t-field="doc.amount_untaxed"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>SGST</strong></td>
+                                            <td><t t-set="sgst" t-value="doc.amount_tax / 2"/>
+                                               <span t-esc="sgst"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>CGST</strong></td>
+                                            <td><span t-esc="sgst"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Amount</strong></td>
+                                            <td><span t-field="doc.amount_total"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                  </main>
+            </t>
+        </template>
+    </data>
+</odoo>
