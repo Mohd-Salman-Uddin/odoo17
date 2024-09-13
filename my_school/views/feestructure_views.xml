@@ -22,7 +22,6 @@
         <field name="arch" type="xml">
             <form string="Fee Details">
                 <header>
-                    <button name="action_confirm" string="Paid" type="object" class="oe_highlight"/>
                     <field name="status" widget="statusbar"/>
                 </header>
 

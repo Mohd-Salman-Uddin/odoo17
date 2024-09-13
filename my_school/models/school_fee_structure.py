@@ -14,14 +14,11 @@ class FeesStructure(models.Model):
          ('Transport Fee', 'Transport Fee'), ('Other Fee', 'Other Fee')], string="Fee Type")
     due_date = fields.Date(string='Due Date')
     amount = fields.Float(string='Untaxed Fee')
-    status = fields.Selection([("Unpaid", "Unpaid"), ("Paid", "Paid")], default="Unpaid")
+    status = fields.Selection([("Unpaid", "Unpaid"), ("Paid", "Paid")], default="Unpaid", track_visibility="onchange")
     tax = fields.Many2many('account.tax', string="Tax")
     tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', default=0.0, store=True)
     total_amount = fields.Float(string='Total', compute='_compute_total_amount', store=True)
-
-    def action_confirm(self):
-        for rec in self:
-            rec.status = "paid"
+    invoice_id = fields.Many2one('account.move', string='Invoice', readonly=True)
 
     @api.onchange('product_id')
     def _fetch_values(self):
@@ -42,7 +39,6 @@ class FeesStructure(models.Model):
                 elif rec.fee_type == 'Other Fee':
                     rec.amount = 0
 
-
     @api.depends('amount', 'tax')
     def _compute_tax_amount(self):
         for rec in self:
@@ -61,6 +57,20 @@ class FeesStructure(models.Model):
 
     def action_proceed_payment(self):
         self.ensure_one()
+
+        # Check if an invoice already exists
+        if self.invoice_id:
+            # Redirect to the existing invoice
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Invoice'),
+                'res_model': 'account.move',
+                'res_id': self.invoice_id.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+
+        # If no invoice exists, create a new one
         partner = self.env['res.partner'].search([('name', '=', self.student_id.student_name)], limit=1)
         invoice = self.env['account.move'].create({
             'partner_id': partner.id,
@@ -77,6 +87,11 @@ class FeesStructure(models.Model):
                 'tax_ids': [(6, 0, self.tax.ids)],
             })],
         })
+
+        # Link the invoice to the fee structure
+        self.invoice_id = invoice.id
+
+        # Redirect to the newly created invoice
         return {
             'type': 'ir.actions.act_window',
             'name': _('Invoice'),
@@ -85,3 +100,24 @@ class FeesStructure(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    @api.depends('invoice_id.payment_state')
+    def _compute_status_based_on_invoice(self):
+        """ Compute the fee status based on invoice payment state """
+        for rec in self:
+            if rec.invoice_id:
+                payment_state = rec.invoice_id.payment_state
+                print(f"Invoice ID: {rec.invoice_id.id} - Payment State: {payment_state}")
+
+                if payment_state == 'paid':
+                    rec.status = 'Paid'
+                else:
+                    rec.status = 'Unpaid'
+            else:
+                rec.status = 'Unpaid'  # If no invoice yet
+                print(f"No Invoice for record {rec.id}, setting status to Unpaid.")
+
+    # Adding a button to manually trigger the computation (for debugging)
+    def action_update_status(self):
+        """Manually trigger the status update based on invoice payment state"""
+        self._compute_status_based_on_invoice()

@@ -76,6 +76,8 @@
                                         <field name="total_amount"/>
                                         <button name="action_proceed_payment" type="object" class="oe_highlight"
                                                 string="Payment" invisible="status=='paid'"/>
+                                          <button name="action_update_status" type="object"
+                                                icon="oi-settings-adjust"/>
                                         <field name="status"/>
                                     </tree>
                                     <form>
