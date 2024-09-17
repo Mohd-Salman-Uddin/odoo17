@@ -34,6 +34,7 @@ As The Difficulty Increases In Management Of School. It's Better To Automate The
         "reports/report_views.xml",
         "reports/new_quotation_report_template.xml",
         "reports/quotation_report.xml",
+        "reports/invoice_report.xml",
 
         "data/cron.xml",
         "data/fee_due_reminder_email_template.xml",

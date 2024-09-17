@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="invoice_report_view" inherit_id="account.report_invoice_document">
+<!--            <xpath expr="//div[@class='header']" position="attributes">-->
+<!--                <attribute name="style">background-color: #f0f0f0; color: #333; padding: 10px; border: 1px solid #ccc;-->
+<!--                </attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//div[@id='informations']" position="replace">
+                <div id="informations" class="row mt-3 mb-1">
+                    <!-- Left Side: Bank Details -->
+                    <div class="col-6">
+                        <table class="details-table">
+                            <tr>
+                                <th>Bank Name:</th>
+                                <td>
+                                    <span t-field="o.bank_name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>IFSC Code:</th>
+                                <td>
+                                    <span t-field="o.ifsc_code"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>A/C Number:</th>
+                                <td>
+                                    <span t-field="o.account_number"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Branch:</th>
+                                <td>
+                                    <span t-field="o.branch"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Right Side: Invoice Details -->
+                    <div class="col-6 right-align">
+                        <table class="details-table">
+                            <tr t-if="o.invoice_date">
+                                <td>
+                                    <strong>
+                                        <t t-if="o.move_type == 'out_invoice'">Invoice Date:</t>
+                                        <t t-elif="o.move_type == 'out_refund'">Credit Note Date:</t>
+                                        <t t-elif="o.move_type == 'out_receipt'">Receipt Date:</t>
+                                        <t t-else="">Date:</t>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_date"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'">
+                                <td>
+                                    <strong>Due Date:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_date_due"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.delivery_date">
+                                <td>
+                                    <strong>Delivery Date:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.delivery_date"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.invoice_origin">
+                                <td>
+                                    <strong>Source:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_origin"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.partner_id.ref">
+                                <td>
+                                    <strong>Customer Code:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.partner_id.ref"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.ref">
+                                <td>
+                                    <strong>Reference:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.ref"/>
+                                </td>
+                            </tr>
+                            <tr t-if="o.invoice_incoterm_id">
+                                <td>
+                                    <strong>Incoterm:</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.invoice_incoterm_id.code"/>
+                                    <t t-if="o.incoterm_location">
+                                        <br/>
+                                        <span t-field="o.incoterm_location"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Styles -->
+                <style>
+                    .details-table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    text-align: left;
+                    }
+
+                    .details-table td, .details-table th {
+                    padding: 8px;
+                    }
+
+                    .right-align {
+                    text-align: right;
+                    }
+
+                    .right-align td {
+                    padding-left: 15px;
+                    }
+                </style>
+            </xpath>
+
+        </template>
+    </data>
+</odoo>
